@@ -1,0 +1,66 @@
+Fiction
+
+Literary Fiction
+Mystery
+Thriller
+Fantasy
+Science Fiction
+Historical Fiction
+Romance
+Horror
+Adventure
+Dystopian
+
+Non-Fiction
+
+Biography/Autobiography
+Memoir
+Self-Help
+Travel
+History
+Science
+Philosophy
+Politics
+Religion/Spirituality
+Business/Finance
+
+
+
+home page code----------------------
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { usePostsStore } from "@/stores/posts";
+import { RouterLink } from "vue-router"; // Import RouterLink for navigation
+
+const posts = ref([]);
+const postsStore = usePostsStore();
+
+onMounted(async () => {
+  posts.value = await postsStore.getAllPosts();
+});
+</script>
+
+<template>
+  <main>
+    <h1>Home</h1>
+    <div v-if="posts.length > 0">
+      <div v-for="post in posts" :key="post.id">
+        <h2>{{ post.title }}</h2>
+        <h4>{{ post.subtitle }}</h4>
+        <p>Posted by {{ post.user?.name || "Unknown" }}</p>
+        <!-- Fallback for user name -->
+        <p>{{ post.body }}</p>
+        <!-- <RouterLink :to="{ path: `/posts/${post.id}`, params: { id: post.id } }">
+          Read more...
+        </RouterLink> -->
+        <RouterLink :to="{ name: 'show', params: { id: post.id } }">
+          Read more...
+        </RouterLink>
+      </div>
+    </div>
+    <div v-else>
+      <p>No posts available.</p>
+    </div>
+  </main>
+</template>
